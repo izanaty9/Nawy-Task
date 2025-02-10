@@ -1,0 +1,203 @@
+openapi: 3.0.0
+info:
+  title: Nawy Apartments API
+  description: API documentation for Nawy Apartments management system
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3001
+    description: Development server
+
+paths:
+  /api/apartments:
+    get:
+      summary: List all apartments
+      description: Retrieve a list of all apartments, with optional search functionality
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search term for filtering apartments
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Apartment'
+        '500':
+          description: Internal server error
+          
+    post:
+      summary: Create a new apartment
+      description: Add a new apartment to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApartmentInput'
+      responses:
+        '201':
+          description: Apartment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Apartment'
+        '400':
+          description: Invalid input
+        '500':
+          description: Internal server error
+
+  /api/apartments/{id}:
+    get:
+      summary: Get apartment by ID
+      description: Retrieve detailed information about a specific apartment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Apartment ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Apartment'
+        '404':
+          description: Apartment not found
+        '500':
+          description: Internal server error
+
+    put:
+      summary: Update apartment
+      description: Update an existing apartment's information
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Apartment ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApartmentInput'
+      responses:
+        '200':
+          description: Apartment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Apartment'
+        '404':
+          description: Apartment not found
+        '500':
+          description: Internal server error
+
+    delete:
+      summary: Delete apartment
+      description: Remove an apartment from the database
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Apartment ID
+      responses:
+        '200':
+          description: Apartment deleted successfully
+        '404':
+          description: Apartment not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    Apartment:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Unique identifier
+        unitName:
+          type: string
+          description: Name of the apartment unit
+        unitNumber:
+          type: string
+          description: Unit number identifier
+        project:
+          type: string
+          description: Project or development name
+        price:
+          type: number
+          description: Price in USD
+        bedrooms:
+          type: number
+          description: Number of bedrooms
+        bathrooms:
+          type: number
+          description: Number of bathrooms
+        area:
+          type: number
+          description: Area in square feet
+        description:
+          type: string
+          description: Detailed description of the apartment
+        images:
+          type: array
+          items:
+            type: string
+          description: Array of image URLs
+        amenities:
+          type: array
+          items:
+            type: string
+          description: List of available amenities
+      required:
+        - unitName
+        - unitNumber
+        - project
+        - price
+
+    ApartmentInput:
+      type: object
+      properties:
+        unitName:
+          type: string
+        unitNumber:
+          type: string
+        project:
+          type: string
+        price:
+          type: number
+        bedrooms:
+          type: number
+        bathrooms:
+          type: number
+        area:
+          type: number
+        description:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        amenities:
+          type: array
+          items:
+            type: string
+      required:
+        - unitName
+        - unitNumber
+        - project
+        - price
